@@ -1,0 +1,250 @@
+<script type='text/javascript' src='knockout-3.2.0.js'></script>
+
+<script type='text/javascript' src='main.js'></script>
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Metis Car Rental</title>
+<meta charset="utf-8" />
+<link rel="shortcut icon" type="image/png" href="logo.png">
+<link href="style.css" rel="stylesheet" type="text/css">
+
+
+
+
+</head>
+<body>
+<div id="logo"><a href="index.html">Metis Car Rental</a> </div>
+ 
+ <div class="nav" id="main">
+<b> <a href="cars.html">Cars</a> </b>
+<a href="financing.html" style = "margin-left: 40px">Financing</a>
+ <a href="customers.html" style = "margin-left: 40px">Customers</a>
+ <a href="contact.html" style = "margin-left: 40px">Contact</a>
+ 
+ 
+ 
+
+<div id="wrapper">
+
+                    
+
+ <div>
+
+
+ </div>
+ 
+ 
+   <div class='borders'>   
+   
+  
+
+<form data-bind="submit:addCar">
+
+    
+ 
+  Car Make <input type="text" data-bind='value:carToAdd, text: carMake, valueUpdate: "afterkeydown"' /> 
+  
+  Car Model <input type="text" data-bind='value:carmodelToAdd, text: carModel, valueUpdate: "afterkeydown"' /> 
+  
+  <br><br>
+ 
+    <button type="submit" data-bind="enable: carToAdd().length > 0">Add to inventory</button>
+    
+</form>
+
+
+
+</table>
+
+<table style="width:100%; color:grey; text-align:center">
+  <tr font-size= "12px">
+    <th>All available cars </th>
+    
+    <th>All rented cars</th>
+  </tr>
+  <tr>
+   <td> <select multiple="multiple" height="10" data-bind="options:allCars, optionsText: make() + ' ' + model(), selectedOptions:selectedCars"> </select></td>
+  <td><select multiple="multiple" height="10" data-bind="options:allRentedCars, selectedOptions:selectedRentedCars"> </select></td>
+  </tr>
+   <tr>
+    
+   
+  </tr>
+  <tr>
+    
+   
+  </tr>
+</table>
+
+ 
+<div>
+
+ <button data-bind="click: markasRented, enable: selectedCars().length > 0">Mark as rented</button>
+  
+  <s style="text-align: right">  <button data-bind="click: removeSelected, enable: selectedCars().length > 0">Delete</button> </s>
+ 
+  
+&nbsp; &nbsp;  &nbsp;  &nbsp;&nbsp;  &nbsp;  &nbsp;  &nbsp;  &nbsp;  &nbsp;  
+&nbsp;  &nbsp;  &nbsp;  &nbsp;  &nbsp;  &nbsp;  &nbsp;  &nbsp;  &nbsp;  
+&nbsp;  &nbsp;  &nbsp;  &nbsp;  &nbsp;  &nbsp;  &nbsp;  &nbsp;  &nbsp;  &nbsp;  
+&nbsp;  &nbsp;  &nbsp;  &nbsp;  &nbsp;  &nbsp;  &nbsp;  &nbsp;  &nbsp;  &nbsp;  
+
+
+  <button data-bind="click: markasAvailable, enable: selectedRentedCars().length > 0">Mark as available</button>
+
+<button data-bind="click: removerentedSelected, enable: selectedRentedCars().length > 0">Delete</button>
+
+
+   
+</div>
+
+
+
+
+
+</div>
+
+
+<div>
+  
+</div>
+
+
+
+
+</div>
+
+
+
+</div>
+
+
+<div id="footer">
+ 
+ <a href="sitemap.html">Site Map</a>
+ &nbsp;
+ <a href="faq.html">Frequently Asked Questions</a>
+  &nbsp;
+ <a href="customers.html">Customers</a>
+ &nbsp;
+ <a href="sitemap.html">Contact</a>
+ 
+ 
+ <br>
+&copy 2014 Joey Abi-Hashim, carrentals.com. San Francisco, CA.  <br>
+<a href="mailto:carrentals@metis.com">Email: car@rentals.com</a>&nbsp;
+
+
+
+
+ </div>
+
+
+<script type="text/javascript">
+
+
+
+
+</script>
+
+
+<script type="text/javascript">
+
+
+
+
+
+  var Cars = function () {
+  
+  this.carMake = ko.observable("");
+  this.carModel = ko.observable("");
+    this.carToAdd = ko.observable("");
+    this.carmodelToAdd = ko.observable("");
+    
+    this.allCars = ko.observableArray([]); 
+   this.allRentedCars = ko.observableArray([]);
+    this.selectedCars = ko.observableArray([]);          
+        this.selectedRentedCars = ko.observableArray([]); 
+ 
+    this.addCar = function () {
+        if ((this.carToAdd() != "" && this.carmodelToAdd) && (this.allCars.indexOf(this.carToAdd()) < 0)) { 
+             var make = carMake();
+             var model = carModel();
+  
+           var car = {make: carMake(), model: carModel() };
+           this.allCars.push(car);
+        }
+        this.carToAdd(""); 
+        this.carmodelToAdd(""); 
+    };
+    
+   
+    this.removeSelected = function () {
+        this.allCars.removeAll(this.selectedCars());
+        this.selectedCars([]); 
+          
+    };
+    
+     this.removerentedSelected = function () {
+         this.allRentedCars.removeAll(this.selectedRentedCars());
+        this.selectedRentedCars([]); 
+    };
+    
+    
+ this.markasRented = function () {
+ 
+    for (var i = 0; i <= this.selectedCars().length -1 ; i++) {
+      this.allRentedCars.push(this.selectedCars()[i]);
+    
+    }
+       this.allCars.removeAll(this.selectedCars());
+       this.selectedCars([]); 
+      
+    };
+    
+     this.markasAvailable = function () {
+     
+         for (var i = 0; i <= this.selectedRentedCars().length -1 ; i++) {
+               this.allCars.push(this.selectedRentedCars()[i]);
+    
+         }
+     
+         
+         this.allRentedCars.removeAll(this.selectedRentedCars());
+       
+        this.selectedRentedCars([]); 
+    };
+ 
+    this.sortCars = function() {
+        this.allCars.sort();
+    };
+};
+ 
+ko.applyBindings(new Cars());
+  
+    
+
+
+
+</script>
+
+
+
+
+
+
+
+</body>
+
+
+
+
+
+
+</html>
